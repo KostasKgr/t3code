@@ -502,13 +502,15 @@ const sessionRules = (
   grants: ReadonlyArray<Rule>,
   mcpServerName: string | null,
 ): ReadonlyArray<Rule> => [
-  ...(policy.runtimeMode === "full-access"
-    ? [rule("*", "allow")]
-    : [
-        rule("shell", "ask"),
-        rule("edit", policy.runtimeMode === "auto-accept-edits" ? "allow" : "ask"),
-        rule("external_directory", "ask"),
-      ]),
+  ...(policy.runtimeMode === "auto"
+    ? []
+    : policy.runtimeMode === "full-access"
+      ? [rule("*", "allow")]
+      : [
+          rule("shell", "ask"),
+          rule("edit", policy.runtimeMode === "auto-accept-edits" ? "allow" : "ask"),
+          rule("external_directory", "ask"),
+        ]),
   ...grants,
   // Plan mode writes only its plan, which `paths` allows again. Shell and read
   // are never denied: the free tier refuses sessions whose rules deny them.
